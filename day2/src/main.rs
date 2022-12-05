@@ -1,56 +1,150 @@
-use std::fs;
+use std::{fs::read_to_string, path::Path};
 
-enum Plays {
-    Rock = 1,
-    Paper = 2,
-    Scissors = 3,
-}
+// struct PlayerMoves {
+//     moves: Vec<(char, char)>,
+// }
 
-enum Outcome {
-    Lost = 0,
-    Draw = 3,
+enum Result {
     Win = 6,
+    Draw = 3,
+    Lose = 0,
 }
-
-use std::collections::HashMap;
-
-let hash_move = HashMap::from([
-    ("A" | "X" | "Rock", 1),
-    ("B" | "Y" | "Paper", 2),
-    ("C" | "Z" | "Scissors", 3),
-]);
-
-let hash_result = HashMap::from([
-    (hash_move::Rock, hash_move::Rock, Outcome::Draw),
-    (hash_move::Rock, hash_move::Paper, Outcome::Lost),
-    (hash_move::Rock, hash_move::Scissors, Outcome::Win),
-
-    (hash_move::Paper, hash_move::Rock, Outcome::Win),
-    (hash_move::Paper, hash_move::Paper, Outcome::Draw),
-    (hash_move::Paper, hash_move::Scissors, Outcome::Lost),
-
-    (hash_move::Scissors, hash_move::Rock, Outcome::Lost),
-    (hash_move::Scissors, hash_move::Paper, Outcome::Win),
-    (hash_move::Scissors, hash_move::Scissors, Outcome::Draw),
-
-]);
-
-
-
-
 
 fn main() {
-    let file = fs::File::open("input.txt");
 
+    let test = read_input("input.txt");
+    let moves = parse_lines(test);
+    let solution1 = part_one(moves.clone());
+    println!("Part one: {solution1}");
+    let solution2 = part_two(moves);
+    println!("Part two: {solution2}");
 
+}
+
+/// read file, and return values within a Vector of Strings.
+fn read_input<T: AsRef<Path>>(path: T) -> Vec<String> {
+    read_to_string(path)
+        .expect("Can't open/read file!")
+        .split("\n")
+        .filter(|s| !s.is_empty()) // so long as the string is not empty
+        .map(|s| s.to_string()) // convert item to a string.
+        .collect()
+}
+
+fn parse_lines(lines: Vec<String>) -> Vec<(char, char)> {
+    // store moves here in a vector<touple>
+    let mut moves: Vec<(char, char)> = Vec::new();
+
+    for line in lines {
+        let (opponent, player) = line.split_once(' ').unwrap();
+        moves.push((
+            opponent.chars().next().unwrap(),
+            player.chars().next().unwrap(),
+        ));
+        //println!("op: {opponent}, player: {player}");
+    }
+    moves
+}
+
+fn part_one(moves: Vec<(char, char)>) -> i32 {
+    let mut score = 0;
+
+    for m in &moves {
+        let opponent_score: i32 = match m.0 {
+            'A' => 1, // Rock
+            'B' => 2, // Paper
+            'C' => 3, // Scissors
+            _ => todo!(),
+        };
+        let player_score: i32 = match m.1 {
+            'X' => 1, // Rock
+            'Y' => 2, // Paper
+            'Z' => 3, // Scissors
+            _ => todo!(),
+        };
+
+        // win
+        if player_score == 1 && opponent_score == 3      // rock beats scissors
+            || player_score == 2 && opponent_score == 1  // Paper beats rock
+            || player_score == 3 && opponent_score == 2  // scissors beat paper
+        {
+            score += player_score + Result::Win as i32;
+        }
+        //draw
+        else if opponent_score == player_score {
+            score += player_score + Result::Draw as i32;
+        }
+        // loss
+        else {
+            score += player_score + Result::Lose as i32;
+        }
+        //println!("DEBUG: score: {score}");
+    }
+    score
+}
+
+// X means lose, 
+// Y means draw,
+// Z means win. Good luck!"
+fn part_two(moves: Vec<(char, char)>) -> i32 {
+    let mut score: i32 = 0;
+
+    for m in &moves {
+        let opponent_score: i32 = match m.0 {
+            'A' => 1, // Rock
+            'B' => 2, // Paper
+            'C' => 3, // Scissors
+            _ => todo!(),
+        };
+
+        match m.1 {
+            // lose
+            'X' => {
+                if opponent_score == 1 { score += 3;}
+                else if opponent_score == 2 { score += 1;}
+                else {score += 2;}
+                
+            },
+            // draw
+            'Y' => {
+                score += opponent_score + 3;
+                
+            },
+            'Z' => { 
+                if opponent_score == 1 { score += 2 + Result::Win as i32;}
+                else if opponent_score == 2 { score += 3 + Result::Win as i32;}
+                else {score += 1 + Result::Win as i32;}
+            },
+             _ => todo!(),
+        };
+    }
+    score
 }
 
 #[cfg(test)]
 mod tests {
+    use super::*;
 
     #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
+    fn test_read_sample() {
+        let test = read_input("sample.txt");
+        //println!("{:?}", test);
+        assert_eq!(test.len(), 2500);
+    }
+
+    #[test]
+    fn test_part_one_sample() {
+        let test = read_input("sample.txt");
+        let result = parse_lines(test);
+        assert_eq!(part_one(result),15);
+        
+    }
+
+    #[test]
+    fn test_part_two_sample() {
+        let test = read_input("sample.txt");
+        let result = parse_lines(test);
+        assert_eq!(part_two(result),12);
+        
     }
 }
