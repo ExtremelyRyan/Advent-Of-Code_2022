@@ -1,5 +1,5 @@
 // --- Day 8: Treetop Tree House ---
-
+#![warn(dead_code)]
 use std::{fs::read_to_string, path::Path};
 
 fn main() { 
@@ -141,7 +141,7 @@ fn part_one(input: Vec<Vec<u8>>) -> usize {
     let v = input.clone();
 
     for (i,r) in input.clone().iter().enumerate() {
-        for (j,c) in r.iter().enumerate() {
+        for (j,_c) in r.iter().enumerate() {
             if !is_hidden_in_column(&v, (i,j)) || !is_hidden_in_row(&v, (i,j)) {
                 visable += 1;
             }
@@ -154,7 +154,6 @@ fn part_one(input: Vec<Vec<u8>>) -> usize {
 fn part_two(input: Vec<Vec<u8>>) -> usize {
 
     let v = input.clone();
-    let mut treehouse_view: Vec<Vec<usize>> = Vec::new();
     let mut max = 0;
 
     for (i,r) in input.clone().iter().enumerate() {
@@ -172,7 +171,6 @@ fn part_two(input: Vec<Vec<u8>>) -> usize {
       max
 }
     
-
 
 fn check_col_scenery(input: &Vec<Vec<u8>>, current_coordinates: (usize, usize)) -> usize {
     let (row, col) = current_coordinates;
@@ -198,7 +196,7 @@ fn check_col_scenery(input: &Vec<Vec<u8>>, current_coordinates: (usize, usize)) 
     println!("view_up: {view_up}, view_down: {view_down}, result: {}",  view_up * view_down);
     view_up * view_down
 }
-
+#[warn(dead_code)]
 fn check_row_scenery(input: &Vec<Vec<u8>>, current_coordinates: (usize, usize)) -> usize {
     let (row, col) = current_coordinates;
     // comparison target
