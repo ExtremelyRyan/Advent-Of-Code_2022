@@ -118,7 +118,7 @@ fn part_two(input: Vec<(String, String)> ) -> i32{
     aggregate.iter().sum()    
     //x
 }
-
+ 
 fn draw_pixel(cycle: i32, x: i32) {
     let current_pos = cycle % 40;
     if cycle != x-1 | x | x+1 {
