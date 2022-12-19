@@ -74,67 +74,43 @@ fn parse(input: Vec<Vec<u8>>) -> Vec<Vec<bool>> {
     //println!("visable: {visable:?}");
     visable
 }
- // returns true if coordinates is hidden, false if visable
-fn is_hidden_in_column(input: &Vec<Vec<u8>>, current_coordinates: (usize, usize)) -> bool {
-    
-    let (row, col) = current_coordinates;
-    // comparison target
-    let max = input[row][col];
-    //println!("\nTesting [{row}][{col}]:{max}");
-    // return value
-    let mut up = false;
-    let mut down = false;
 
-    //println!("reviewing: {}", input[row][col]);
-
-    // check up
-    for u in 0..row {
-        //println!("up[{u}][{col}] = {}", input[u][col]);
-        if input[u][col] >= max {
-            up = true;
-        }
-    }
-    // check down
-    for d in row+1..input.len() {
-        //println!("dn[{d}][{col}] = {}", input[d][col]);
-        if max <= input[d][col] {
-            down = true;
-        }
-    }
-    //println!("up: {up}, down: {down}");
-    up & down 
-    
-}
-
-// returns true if coordinates is hidden, false if visable
-fn is_hidden_in_row(input: &Vec<Vec<u8>>, current_coordinates: (usize, usize)) -> bool {
-    let (row, col) = current_coordinates;
-    // comparison target
-    let max = input[row][col];
-    //println!("\nTesting {max}");
+fn is_hidden(input: &Vec<Vec<u8>>, current_coordinates: (usize, usize)) -> bool {
+    let (row, col) = current_coordinates; 
+    let max = input[row][col]; 
 
     // return value
-    let mut left  = false;
-    let mut right = false;
+    let mut visable  = false; 
+ 
 
     // check left
     for l in 0..col {
-        //println!("left: [{row}][{l}] = {}", input[row][l]);
         if max <= input[row][l] {
-            left = true;
+            visable = true;
         }
     }
     // check right
     for r in col+1..input[row].len() {
-        //println!("right: [{row}][{r}] = {}", input[row][r]);
         if input[row][r] >= max {
-            right = true;
+            visable = true;
+        }
+    } 
+    // check up
+    for u in 0..row { 
+        if input[u][col] >= max {
+            visable = true;
         }
     }
-    //println!("left: {left}, right: {right}");
-    left & right
+    // check down
+    for d in row+1..input.len() { 
+        if max <= input[d][col] {
+            visable = true;
+        }
+    } 
+    visable
 }
-
+ // returns true if coordinates is hidden, false if visable
+  
 // how many trees are visible (true) from outside the grid?
 fn part_one(input: Vec<Vec<u8>>) -> usize {
     let mut visable = 0;
@@ -142,7 +118,8 @@ fn part_one(input: Vec<Vec<u8>>) -> usize {
 
     for (i,r) in input.clone().iter().enumerate() {
         for (j,_c) in r.iter().enumerate() {
-            if !is_hidden_in_column(&v, (i,j)) || !is_hidden_in_row(&v, (i,j)) {
+            // if !is_hidden_in_column(&v, (i,j)) || !is_hidden_in_row(&v, (i,j)) {
+            if !is_hidden(&v, (i,j)) {
                 visable += 1;
             }
         }
@@ -158,19 +135,66 @@ fn part_two(input: Vec<Vec<u8>>) -> usize {
 
     for (i,r) in input.clone().iter().enumerate() {
         for (j,c) in r.iter().enumerate() {
-            println!("dbg: [{i}][{j}]: {c}");
+           println!("dbg: [{i}][{j}]: {c}");
             let temp = check_col_scenery(&v, (i,j)) * check_row_scenery(&v, (i,j));
             //treehouse_view[i][j] = temp;
             if temp > max {
                 max = temp;
                 //max = treehouse_view[i][j];
              }
-             println!("max: {max}");
+             println!("max: {max}\n\n");
         }
       }
       max
 }
-    
+
+fn part2(file: &str) -> usize {
+    let trees = std::fs::read_to_string(file)
+        .expect("couldn't read file")
+        .lines()
+        .map(|l| {
+            l.chars()
+                .map(|c| c.to_string().parse().unwrap_or_default())
+                .collect::<Vec<usize>>()
+        })
+        .collect::<Vec<Vec<usize>>>();
+
+    let mut highest = 0;
+    for x in 1..trees.len() - 1 {
+        for y in 1..trees[x].len() - 1 {
+            let mut score = [0, 0, 0, 0];
+            for i in (0..x).rev() {
+                score[0] += 1;
+                if trees[i][y] >= trees[x][y] {
+                    break;
+                }
+            }
+            for i in x + 1..trees.len() {
+                score[1] += 1;
+                if trees[i][y] >= trees[x][y] {
+                    break;
+                }
+            }
+            for i in (0..y).rev() {
+                score[2] += 1;
+                if trees[x][i] >= trees[x][y] {
+                    break;
+                }
+            }
+            for i in y + 1..trees[x].len() {
+                score[3] += 1;
+                if trees[x][i] >= trees[x][y] {
+                    break;
+                }
+            }
+            let score = score[0] * score[1] * score[2] * score[3];
+            if score > highest {
+                highest = score;
+            }
+        }
+    }
+    highest
+}
 
 fn check_col_scenery(input: &Vec<Vec<u8>>, current_coordinates: (usize, usize)) -> usize {
     let (row, col) = current_coordinates;
@@ -214,7 +238,7 @@ fn check_row_scenery(input: &Vec<Vec<u8>>, current_coordinates: (usize, usize)) 
         }
         // check right
         for r in col+1..input[row].len() {
-            println!("right: [{row}][{r}] = {}", input[row][r]);
+           println!("right: [{row}][{r}] = {}", input[row][r]);
             if input[row][r] >= max {
                 view_right = r.abs_diff(col); break;
             }
@@ -231,20 +255,20 @@ mod tests {
     fn test_sample() {
         let s = read_input("sample.txt");
 
-        let test_col_1 = is_hidden_in_column(&s.clone(), (3,3));
+        let test_col_1 = is_hidden(&s.clone(), (3,3));
         assert_eq!(test_col_1, true);
-        let test_col_2 = is_hidden_in_column(&s.clone(), (3,2));
+        let test_col_2 = is_hidden(&s.clone(), (3,2));
         assert_eq!(test_col_2, false);
-        let test_col_3 = is_hidden_in_column(&s.clone(), (0,0));
+        let test_col_3 = is_hidden(&s.clone(), (0,0));
         assert_eq!(test_col_3, false);
-        let test_col_4 = is_hidden_in_column(&s.clone(), (4,4));
+        let test_col_4 = is_hidden(&s.clone(), (4,4));
         assert_eq!(test_col_4, false);
 
-        let test_row_1 = is_hidden_in_row(&s.clone(), (3,3));
+        let test_row_1 = is_hidden(&s.clone(), (3,3));
         assert_eq!(test_row_1, true);
-        let test_row_2 = is_hidden_in_row(&s.clone(), (3,2));
+        let test_row_2 = is_hidden(&s.clone(), (3,2));
         assert_eq!(test_row_2, false); 
-        let test_row_3 = is_hidden_in_row(&s.clone(), (4,4));
+        let test_row_3 = is_hidden(&s.clone(), (4,4));
         assert_eq!(test_row_3, false); 
     }
 
@@ -267,7 +291,18 @@ mod tests {
         let s = read_input("sample.txt");
         let result = part_two(s);
         println!("sample result: {result}");
+
+        // let s = read_input("input.txt");
+        // let result = part_two(s);
+        // println!("input result: {result}");
     }
+
+    #[test]
+    fn tst() {
+        let num: i32 = 10;
+        assert_eq!(5, num.abs_diff(5));
+    }
+
 
     
 }
