@@ -1,100 +1,145 @@
-use std::{fs::{File}, io::{BufReader, BufRead}};
+ 
+use std::fmt::Debug;
+use std::str::FromStr;
+use std::str::Lines;
 
+type Item = i64;
+type Operand = i64;
+type Operation = Box<dyn Fn(Item) -> Item>;
 
-#[derive(Debug, Default)]
-struct Monkey { 
-    item: Vec<Items>,
-}
-#[derive(Debug, Default)]
-struct Items {
-    worry: Vec<i32>,
-    operation: (bool, bool),
-    test: i32,
-    throw: (i32,i32),
-}
-
-
-impl Monkey {
-    pub fn new() -> Self {
-        Self { item: Vec::new() }
-    }
+struct Monkey {
+    items: Vec<Item>,
+    operation: Operation,
+    test: i64,
+    if_true: usize,
+    if_false: usize,
+    inspections: usize,
 }
 
-impl Items {
-    pub fn new() -> Self {
-        Self { worry: vec![], operation: (false,false), test: 0, throw: (0,0) }
-    }
-}
-fn main() {
-    println!("Day 11 not done!");
+// Helpers for parsing:
+
+fn strip_next<'a>(lines: &mut Lines<'a>, prefix: &str) -> &'a str {
+    lines.next().unwrap().strip_prefix(prefix).unwrap()
 }
 
-fn parse(path: String) -> Vec<String>  {
-    let lines = std::fs::read_to_string(path);
-    let binding = lines.unwrap();
-    let s: Vec<String> = binding.split("\n")
-    .map(|s| s.to_string()).collect::<Vec<String>>();
-
-    for ss in s.iter() {
-        println!("{ss}");
-    }
-    s 
+fn parse_next<F>(lines: &mut Lines, prefix: &str) -> F
+where
+    F: FromStr,
+    <F as FromStr>::Err: Debug,
+{
+    strip_next(lines, prefix).parse().unwrap()
 }
 
-fn clean(input : Vec<String>) {
+fn parse_items(lines: &mut Lines, prefix: &str) -> Vec<Item> {
+    strip_next(lines, prefix)
+        .split(", ")
+        .map(|item| item.parse().unwrap())
+        .collect()
+}
 
-    let mut m = Monkey::default();
+fn parse_operation(lines: &mut Lines, prefix: &str) -> Operation {
+    let operands: Vec<_> = strip_next(lines, prefix).split(' ').collect();
 
-    for line in input.iter() {
+    match operands[..] {
+        ["old", "*", "old"] => Box::new(|x| x * x),
 
-        if line.contains("Monkey") {
-            m = Monkey::default();
+        ["old", "*", y] => {
+            let y: Operand = y.parse().unwrap();
+            Box::new(move |x| x * y)
         }
 
-        let mut itm = Items::default();
+        ["old", "+", y] => {
+            let y: Operand = y.parse().unwrap();
+            Box::new(move |x| x + y)
+        }
 
+        _ => panic!("{operands:?}"),
+    }
+}
 
+fn parse() -> Vec<Monkey> {
+    let mut result = Vec::new();
+    let mut lines = include_str!("../../input/day11_input.txt").lines();
+    loop {
+        lines.next(); // Skip monkey ID.
 
+        result.push(Monkey {
+            items: parse_items(&mut lines, "  Starting items: "),
+            operation: parse_operation(&mut lines, "  Operation: new = "),
+            test: parse_next(&mut lines, "  Test: divisible by "),
+            if_true: parse_next(&mut lines, "    If true: throw to monkey "),
+            if_false: parse_next(&mut lines, "    If false: throw to monkey "),
+            inspections: 0,
+        });
+
+        if lines.next().is_none() {
+            break;
+        }
     }
 
+    result
+}
 
-    // let mut monke: Vec<&Monkey> = Vec::new();
+fn solve<R>(mut monkeys: Vec<Monkey>, rounds: usize, reduction: R) -> usize
+where
+    R: Fn(Item) -> Item,
+{
+    for _ in 0..rounds {
+        for m in 0..monkeys.len() {
+            let monkey = &mut monkeys[m];
+            // Apply math to items.
+            let items: Vec<_> = monkey
+                .items
+                .drain(..)
+                .map(|item| (monkey.operation)(item))
+                .map(&reduction)
+                .collect();
 
-    // let mut m = Monkey::new();
+            // Count inspections.
+            monkey.inspections += items.len();
 
-    // for line in input.iter() {
-    //     if line.contains("Monkey") {
-    //         let mut m = Monkey::new();
-    //     }
-    //     if line.contains("Starting") {
-    //         let v: Vec<&str> = line.split(' ').collect();
+            // Throw items to other monkyes.
+            let test = monkey.test;
+            let if_true = monkey.if_true;
+            let if_false = monkey.if_false;
+            for item in items {
+                let target = if item % test == 0 { if_true } else { if_false };
+                monkeys[target].items.push(item);
+            }
+        }
+    }
 
-    //          for x in v.iter() {
-    //             if x.parse::<i32>().is_ok() {
-    //                 let n = x.parse::<i32>().unwrap();
-    //                 m.items.push(n);
-    //             }
-    //         }
-    //     }
-    //     monke.push(&m);
-    //     println!("Monkey: {:?}", &m);
-    // }
-
+    // Extract inspection counts.
+    let mut inspections: Vec<_> = monkeys.iter().map(|m| m.inspections).collect();
+    // Return product of top two inspection counts.
+    inspections.sort_unstable_by(|a, b| b.cmp(a));
+    inspections.iter().take(2).product()
 }
 
 
+fn main() {
+    let monkeys = parse();
+    let result = solve(monkeys, 20, |x| x / 3);
+    println!("part one: {result}");
 
 
-#[cfg(test)]
-mod test {
-    use super::*;
+    let monkeys = parse();
+    let lcd: Operand = monkeys.iter().map(|m| m.test).product();
+    let result = solve(monkeys, 10_000, |x| x % lcd);
+    println!("part two: {result}");
+}
 
-    #[test]
-    fn example1() {
-        let lines = parse(String::from("./input/day11_sample.txt"));
-        assert_eq!(lines.len(), 27);
+#[test]
+fn test_part1() {
+    let monkeys = parse();
+    let result = solve(monkeys, 20, |x| x / 3);
+    assert_eq!(119715, result);
+}
 
-        clean(lines);
-    }
-
+#[test]
+fn test_part2() {
+    let monkeys = parse();
+    let lcd: Operand = monkeys.iter().map(|m| m.test).product();
+    let result = solve(monkeys, 10_000, |x| x % lcd);
+    assert_eq!(18085004878, result);
 }

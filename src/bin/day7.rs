@@ -5,6 +5,7 @@ fn directory_size(reader: &mut Lines<BufReader<File>>, list: &mut Vec<i32>) -> i
 
     loop {
         let line = reader.next();
+        println!("line: {line:?}");
         match line {
             None => break,
             _ => (),
@@ -30,6 +31,7 @@ fn main() -> std::io::Result<()> {
     let mut reader = BufReader::new(file).lines();
     let mut directories: Vec<i32> = Vec::new();
     let total = directory_size(&mut reader, &mut directories);
+ 
 
     let part1: i32 = directories.iter()
     .fold(0, | acc, directory | {

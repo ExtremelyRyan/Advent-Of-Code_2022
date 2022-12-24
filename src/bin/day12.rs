@@ -5,6 +5,7 @@ fn main() {
 
     // find locations of S, E
     
+    
 }
 
 fn get_ascii_value(ch: char) -> i32 {
@@ -17,7 +18,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_sample() {
+    fn test_sample() { 
         let test = aoc::input_to_vv_char("./input/day12_sample.txt");
        //println!("{:?}", test);
         assert_eq!(test.len(), 5);

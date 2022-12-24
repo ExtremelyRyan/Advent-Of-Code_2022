@@ -3,8 +3,9 @@
 use std::{path::Path, fs::read_to_string};
 
 fn main() {
-    let p = parse("./input/day10_input.txt"); 
-    println!("part one: {}", part_one(p));
+    // let p = parse("./input/day10_input.txt"); 
+    // println!("part one: {}", part_one(p));
+    test_part1();test_part2() 
 }
 
  
@@ -127,6 +128,59 @@ fn draw_pixel(cycle: i32, x: i32) {
 fn check_current_cycle(cycle: i32) -> bool {
     cycle == 20 || cycle == 60 || cycle == 100 || cycle == 140 || cycle == 180 || cycle == 220 
 }
+
+
+
+fn values() -> Vec<isize> {
+    let mut values = Vec::new();
+    let mut x = 1;
+    for line in include_str!("..\\..\\input\\day10_input.txt").lines() {
+        values.push(x);
+        if line != "noop" {
+            values.push(x);
+            let delta: isize = line.split_at(5).1.parse().unwrap();
+            x += delta;
+        }
+    }
+    values
+}
+
+fn test_part1() {
+    let result: isize = values()
+        .iter()
+        .enumerate()
+        .map(|(i, &x)| (isize::try_from(i).unwrap() + 1) * x)
+        .skip(19)
+        .step_by(40)
+        .sum();
+   println!("{result}");
+}
+
+fn test_part2() {
+    let result: String = values()
+        .iter()
+        .zip((0..40).cycle())
+        .map(|(value, position)| {
+            if (value - position).abs() <= 1 {
+                '#'
+            } else {
+                '.'
+            }
+        })
+        .collect();
+
+        for (i,c) in result.chars().enumerate() {
+            if i % 40 != 0 && i!= 0 {
+                print!("{c}");
+            }
+            else {
+                println!("{c}")
+            }
+
+        }
+    }
+
+
 
 #[cfg(test)]
 mod test {
