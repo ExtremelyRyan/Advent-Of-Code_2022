@@ -1,7 +1,7 @@
 use std::{fs::read_to_string, path::Path};
 
 fn main() {
-    let input = read_input("./input/day3_input.txt"); 
+    let input = read_input("./input/day3_input.txt");
     let rucksack = parse_lines(input);
     let result = part_one(rucksack);
     println!("part one: {result}");
@@ -36,8 +36,7 @@ fn get_ascii_value(found: Vec<char>) -> i32 {
     for i in found {
         if i.is_uppercase() {
             return i as i32 - 38;
-        }
-        else {
+        } else {
             return i as i32 - 96;
         }
     }
@@ -49,11 +48,12 @@ fn part_one(rucksack: Vec<(String, String)>) -> i32 {
     let mut found: Vec<char> = Vec::new();
 
     for (left, right) in rucksack {
-    let matches = left.chars()
-    .into_iter()
-    .filter(|&a| right.contains(a)).collect::<Vec<char>>();
-    found.push(matches[0]);
-
+        let matches = left
+            .chars()
+            .into_iter()
+            .filter(|&a| right.contains(a))
+            .collect::<Vec<char>>();
+        found.push(matches[0]);
     }
     //println!("found: {found:?}");
 
@@ -64,8 +64,8 @@ fn part_one(rucksack: Vec<(String, String)>) -> i32 {
 }
 
 fn part_two<T: AsRef<Path>>(path: T) -> i32 {
-// Every set of three lines in your list corresponds to a single group
-// 
+    // Every set of three lines in your list corresponds to a single group
+    //
     let mut sum = 0;
     let mut index = 0;
 
@@ -73,15 +73,18 @@ fn part_two<T: AsRef<Path>>(path: T) -> i32 {
     let length = lines.len();
 
     loop {
-        if index >= length { break;}
+        if index >= length {
+            break;
+        }
 
         let comp1 = &lines[index];
-        let comp2 = &lines[index+1];
-        let comp3 = &lines[index+2];
-        let shared = comp1.chars()
-        .into_iter()
-        .filter(|&a| comp2.contains(a) && comp3.contains(a))
-        .collect::<Vec<char>>();
+        let comp2 = &lines[index + 1];
+        let comp3 = &lines[index + 2];
+        let shared = comp1
+            .chars()
+            .into_iter()
+            .filter(|&a| comp2.contains(a) && comp3.contains(a))
+            .collect::<Vec<char>>();
 
         if shared.len() > 0 {
             sum += get_ascii_value(shared);
@@ -98,7 +101,7 @@ mod tests {
     #[test]
     fn test_read_sample() {
         let test = read_input("./input/day3_sample.txt");
-       // println!("{:?}", test);
+        // println!("{:?}", test);
         assert_eq!(test.len(), 6);
     }
 
@@ -107,8 +110,8 @@ mod tests {
         let test = read_input("./input/day3_sample.txt");
         //println!("{:?}", test);
         let rucksack = parse_lines(test);
-       // for r in &rucksack {
-            //println!("left: {}, right: {}", r.0, r.1);
+        // for r in &rucksack {
+        //println!("left: {}, right: {}", r.0, r.1);
         //}
         assert!(rucksack[0].0 == "vJrwpWtwJgWr");
     }
@@ -135,5 +138,4 @@ mod tests {
         dbg!(result);
         assert_eq!(result, 2602);
     }
-
 }

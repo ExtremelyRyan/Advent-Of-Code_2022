@@ -1,5 +1,3 @@
-
- 
 enum Result {
     Win = 6,
     Draw = 3,
@@ -7,16 +5,14 @@ enum Result {
 }
 
 fn main() {
-
     let test = aoc::input_to_vec_string("./input/day2_input.txt");
     let moves = parse_lines(test);
     let solution1 = part_one(moves.clone());
     println!("Part one: {solution1}");
     let solution2 = part_two(moves);
     println!("Part two: {solution2}");
-
 }
- 
+
 fn parse_lines(lines: Vec<String>) -> Vec<(char, char)> {
     // store moves here in a vector<touple>
     let mut moves: Vec<(char, char)> = Vec::new();
@@ -52,7 +48,8 @@ fn part_one(moves: Vec<(char, char)>) -> i32 {
         // win
         if player_score == 1 && opponent_score == 3      // rock beats scissors
             || player_score == 2 && opponent_score == 1  // Paper beats rock
-            || player_score == 3 && opponent_score == 2  // scissors beat paper
+            || player_score == 3 && opponent_score == 2
+        // scissors beat paper
         {
             score += player_score + Result::Win as i32;
         }
@@ -69,7 +66,7 @@ fn part_one(moves: Vec<(char, char)>) -> i32 {
     score
 }
 
-// X means lose, 
+// X means lose,
 // Y means draw,
 // Z means win. Good luck!"
 fn part_two(moves: Vec<(char, char)>) -> i32 {
@@ -86,22 +83,28 @@ fn part_two(moves: Vec<(char, char)>) -> i32 {
         match m.1 {
             // lose
             'X' => {
-                if opponent_score == 1 { score += 3;}
-                else if opponent_score == 2 { score += 1;}
-                else {score += 2;}
-                
-            },
+                if opponent_score == 1 {
+                    score += 3;
+                } else if opponent_score == 2 {
+                    score += 1;
+                } else {
+                    score += 2;
+                }
+            }
             // draw
             'Y' => {
                 score += opponent_score + 3;
-                
-            },
-            'Z' => { 
-                if opponent_score == 1 { score += 2 + Result::Win as i32;}
-                else if opponent_score == 2 { score += 3 + Result::Win as i32;}
-                else {score += 1 + Result::Win as i32;}
-            },
-             _ => todo!(),
+            }
+            'Z' => {
+                if opponent_score == 1 {
+                    score += 2 + Result::Win as i32;
+                } else if opponent_score == 2 {
+                    score += 3 + Result::Win as i32;
+                } else {
+                    score += 1 + Result::Win as i32;
+                }
+            }
+            _ => todo!(),
         };
     }
     score
@@ -122,15 +125,13 @@ mod tests {
     fn test_part_one_sample() {
         let test = aoc::input_to_vec_string("./input/day2_sample.txt");
         let result = parse_lines(test);
-        assert_eq!(part_one(result),15);
-        
+        assert_eq!(part_one(result), 15);
     }
 
     #[test]
     fn test_part_two_sample() {
         let test = aoc::input_to_vec_string("./input/day2_sample.txt");
         let result = parse_lines(test);
-        assert_eq!(part_two(result),12);
-        
+        assert_eq!(part_two(result), 12);
     }
 }

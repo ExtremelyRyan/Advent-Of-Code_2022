@@ -1,4 +1,4 @@
-use std::{path::Path, fs::read_to_string};
+use std::{fs::read_to_string, path::Path};
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
@@ -14,7 +14,6 @@ mod tests {
         assert_eq!(result, 4);
     }
 }
-
 
 /// read file, and return values within a Vector of Strings.
 pub fn input_to_vec_string<T: AsRef<Path>>(path: T) -> Vec<String> {
@@ -44,5 +43,4 @@ pub fn input_to_vv_char<T: AsRef<Path>>(path: T) -> Vec<Vec<char>> {
         ch.push(v);
     }
     ch
-
 }

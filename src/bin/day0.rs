@@ -1,13 +1,12 @@
-use aoc::*;
+//use aoc::*;
 
 fn main() {
     println!("Day 0 not complete")
 }
 
-
 #[cfg(test)]
 mod tests {
-    use super::*;
+    //use super::*;
 
     #[test]
     fn test_1() {
@@ -15,5 +14,4 @@ mod tests {
         //println!("{:?}", test);
         assert_eq!(test.len(), 2500);
     }
-
 }

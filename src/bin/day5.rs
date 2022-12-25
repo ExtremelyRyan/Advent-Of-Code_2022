@@ -1,6 +1,5 @@
 #![allow(dead_code, unused)]
-use std::{path::Path, fs::read_to_string, collections::VecDeque};
-
+use std::{collections::VecDeque, fs::read_to_string, path::Path};
 
 #[derive(Default, Debug)]
 pub struct Day5 {
@@ -21,7 +20,7 @@ struct Move {
 }
 
 fn main() {
-    let lines = read_input("./input/day5_input.txt"); 
+    let lines = read_input("./input/day5_input.txt");
     func(lines);
 }
 
@@ -36,20 +35,17 @@ fn read_input<T: AsRef<Path>>(path: T) -> Vec<String> {
 }
 
 fn parse_input(input: Vec<String>) {
-
     for lines in input {
         let mut _v: Vec<char> = Vec::new();
         if lines.contains('[') {
-            
-            let line = lines.as_bytes().chunks(4)
-            .map(std::str::from_utf8)
-            .map(|v| v.unwrap().trim())
-            .collect::<Vec<&str>>();
+            let line = lines
+                .as_bytes()
+                .chunks(4)
+                .map(std::str::from_utf8)
+                .map(|v| v.unwrap().trim())
+                .collect::<Vec<&str>>();
             //println!("{line:?}");
-
-
         }
-
     }
 }
 
@@ -57,13 +53,14 @@ fn parse_input(input: Vec<String>) {
 https://github.com/UncleScientist/aoclib-rs/blob/4adb0939afb1de0d9c62587c6b9b494cb663fadf/src/bin/run-aoc/aoc2022/aoc2022_05.rs#L22
 */
 fn func(input: Vec<String>) {
-
     let mut aoc = Day5::new();
 
-    for lines in input { 
-
+    for lines in input {
         if lines.contains('[') {
-            for pair in lines.chars().enumerate().filter(|(i,c)| *c != ' ' && (i + 3) % 4 == 0)
+            for pair in lines
+                .chars()
+                .enumerate()
+                .filter(|(i, c)| *c != ' ' && (i + 3) % 4 == 0)
             {
                 let stack = (pair.0 - 1) / 4;
                 //println!("pair: {pair:?} , stack: {stack}");
@@ -74,25 +71,23 @@ fn func(input: Vec<String>) {
             }
         }
 
-
         if lines.contains("move") {
-        let words = lines.split_whitespace().collect::<Vec<&str>>();
-        //println!("{:?}", words);
-         if lines.contains("move") {
-            let amount: usize = words[1].parse().unwrap();
-            let from: usize = words[3].parse::<usize>().unwrap() - 1; 
-            let to: usize = words[5].parse::<usize>().unwrap() - 1; 
-            aoc.instructions.push(Move{amount, from, to});
+            let words = lines.split_whitespace().collect::<Vec<&str>>();
+            //println!("{:?}", words);
+            if lines.contains("move") {
+                let amount: usize = words[1].parse().unwrap();
+                let from: usize = words[3].parse::<usize>().unwrap() - 1;
+                let to: usize = words[5].parse::<usize>().unwrap() - 1;
+                aoc.instructions.push(Move { amount, from, to });
+            }
         }
-        }
-       
     }
     //println!("{:?}", aoc);
 
     let mut ship1 = aoc.ship.clone();
     let mut ship2 = aoc.ship.clone();
 
-    // move crates from stack to stack 
+    // move crates from stack to stack
     for i in &aoc.instructions {
         for _ in 0..i.amount {
             let temp = ship1[i.from].pop_back().unwrap();
@@ -107,45 +102,40 @@ fn func(input: Vec<String>) {
     println!("part one: {answer}");
 
     // part two
-    for i in aoc.instructions  {
-
+    for i in aoc.instructions {
         let split_point = ship2[i.from].len() - i.amount;
         let removed = ship2[i.from].split_off(split_point);
         ship2[i.to].extend(removed);
     }
 
     let mut answer_part_two = "".to_string();
-    for stack in ship2{
+    for stack in ship2 {
         answer_part_two.push(*stack.back().unwrap());
     }
 
     println!("part two: {answer_part_two}");
-
 }
 
-
-
 #[cfg(test)]
-mod tests { 
+mod tests {
     use super::*;
 
     #[test]
     fn read_sample_input() {
-        let lines = read_input("./input/day5_sample.txt"); 
+        let lines = read_input("./input/day5_sample.txt");
         assert_eq!(lines.len(), 9);
     }
 
     #[test]
     fn parse_sample() {
-        let lines = read_input("./input/day5_sample.txt"); 
+        let lines = read_input("./input/day5_sample.txt");
         parse_input(lines);
         //assert_eq!(lines.len(), 9);
     }
 
     #[test]
     fn func_test() {
-        let lines = read_input("./input/day5_sample.txt"); 
-        func(lines); 
+        let lines = read_input("./input/day5_sample.txt");
+        func(lines);
     }
-
 }

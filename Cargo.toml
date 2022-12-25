@@ -7,7 +7,7 @@ author = "Ryan M"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
+itertools = "0.10"
 
 [term]
 quiet = true

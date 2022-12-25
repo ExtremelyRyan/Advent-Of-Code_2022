@@ -1,4 +1,3 @@
-
 use std::collections::HashSet;
 
 type Point = (i32, i32);
@@ -47,10 +46,8 @@ fn main() {
     println!("part one: {}", visit(2));
     println!("part two: {}", visit(10));
 }
- 
- 
+
 #[cfg(test)]
- 
 #[test]
 fn test_part1() {
     assert_eq!(6_269, visit(2));

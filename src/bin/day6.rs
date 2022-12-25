@@ -3,13 +3,12 @@
 use std::{collections::HashMap, fs::read_to_string, path::Path};
 
 fn main() {
-    let s = read_input("./input/day6_input.txt"); 
+    let s = read_input("./input/day6_input.txt");
     let marker = find_duplicate_chars(s.clone(), 4);
     println!("part one marker: {marker}");
 
     let marker2 = find_duplicate_chars(s, 14);
     println!("part two marker: {marker2}");
-
 }
 
 /// read file, and return values within a Vector of Strings.
@@ -50,7 +49,7 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let result = read_input("./input/day6_input.txt"); 
+        let result = read_input("./input/day6_input.txt");
         assert_eq!(result.len(), 4095);
     }
 
@@ -68,7 +67,7 @@ mod tests {
 
     #[test]
     fn test_input() {
-        let s = read_input("./input/day6_input.txt"); 
+        let s = read_input("./input/day6_input.txt");
         let marker = find_duplicate_chars(s, 4);
         println!("part one marker: {marker}");
         assert_eq!(marker, 1542);
@@ -76,20 +75,33 @@ mod tests {
 
     #[test]
     fn test_duplicates_part2() {
-        assert_eq!(find_duplicate_chars("mjqjpqmgbljsphdztnvjfqwrcgsmlb".to_string(), 14), 19);
-        assert_eq!(find_duplicate_chars("bvwbjplbgvbhsrlpgdmjqwftvncz".to_string(), 14), 23);
-        assert_eq!(find_duplicate_chars("nppdvjthqldpwncqszvftbrmjlhg".to_string(), 14), 23);
-        assert_eq!(find_duplicate_chars("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg".to_string(), 14), 29);
-        assert_eq!(find_duplicate_chars("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw".to_string(), 14), 26);
+        assert_eq!(
+            find_duplicate_chars("mjqjpqmgbljsphdztnvjfqwrcgsmlb".to_string(), 14),
+            19
+        );
+        assert_eq!(
+            find_duplicate_chars("bvwbjplbgvbhsrlpgdmjqwftvncz".to_string(), 14),
+            23
+        );
+        assert_eq!(
+            find_duplicate_chars("nppdvjthqldpwncqszvftbrmjlhg".to_string(), 14),
+            23
+        );
+        assert_eq!(
+            find_duplicate_chars("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg".to_string(), 14),
+            29
+        );
+        assert_eq!(
+            find_duplicate_chars("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw".to_string(), 14),
+            26
+        );
     }
 
     #[test]
     fn test_input_part2() {
-        let s = read_input("./input/day6_input.txt"); 
+        let s = read_input("./input/day6_input.txt");
         let marker = find_duplicate_chars(s, 14);
         println!("part two marker: {marker}");
         assert_eq!(marker, 3153);
     }
-
-
 }

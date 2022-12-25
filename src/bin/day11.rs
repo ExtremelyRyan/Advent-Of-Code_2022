@@ -1,4 +1,3 @@
- 
 use std::fmt::Debug;
 use std::str::FromStr;
 use std::str::Lines;
@@ -116,12 +115,10 @@ where
     inspections.iter().take(2).product()
 }
 
-
 fn main() {
     let monkeys = parse();
     let result = solve(monkeys, 20, |x| x / 3);
     println!("part one: {result}");
-
 
     let monkeys = parse();
     let lcd: Operand = monkeys.iter().map(|m| m.test).product();

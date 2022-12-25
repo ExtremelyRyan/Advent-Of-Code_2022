@@ -1,4 +1,7 @@
-use std::{fs::File, io::{BufReader, BufRead, Lines}};
+use std::{
+    fs::File,
+    io::{BufRead, BufReader, Lines},
+};
 
 fn directory_size(reader: &mut Lines<BufReader<File>>, list: &mut Vec<i32>) -> i32 {
     let mut size: i32 = 0;
@@ -31,10 +34,8 @@ fn main() -> std::io::Result<()> {
     let mut reader = BufReader::new(file).lines();
     let mut directories: Vec<i32> = Vec::new();
     let total = directory_size(&mut reader, &mut directories);
- 
 
-    let part1: i32 = directories.iter()
-    .fold(0, | acc, directory | {
+    let part1: i32 = directories.iter().fold(0, |acc, directory| {
         acc + if *directory <= 100000 { *directory } else { 0 }
     });
 
@@ -42,9 +43,12 @@ fn main() -> std::io::Result<()> {
     let max_space = 70000000;
     let target_space = upgrade_size - (max_space - total);
 
-    let part2: i32 = directories.iter()
-    .fold(total, | acc, directory | {
-        if *directory <= acc && *directory >= target_space { *directory } else { acc }
+    let part2: i32 = directories.iter().fold(total, |acc, directory| {
+        if *directory <= acc && *directory >= target_space {
+            *directory
+        } else {
+            acc
+        }
     });
 
     println!("Part 1: {part1}");

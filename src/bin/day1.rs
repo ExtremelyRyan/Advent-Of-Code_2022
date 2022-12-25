@@ -1,15 +1,13 @@
 use std::fs::File;
-use std::io::{BufReader, BufRead};
- 
-fn main() {
+use std::io::{BufRead, BufReader};
 
+fn main() {
     part1();
     part2();
 }
 
-
 // Find the Elf carrying the most Calories. How many total Calories is that Elf carrying?
-fn part1() { 
+fn part1() {
     let f = File::open("./input/day1_input.txt").expect("unable to open file.");
     let reader = BufReader::new(f);
 
@@ -36,22 +34,22 @@ fn part1() {
         // result to the 'number' variable.
 
         // If an error occurs, print it and continue
-        // Start that code here:   
+        // Start that code here:
         match line.parse::<i32>() {
             Ok(n) => {
                 current += n;
-            },
+            }
             Err(e) => {
                 println!("Error: {}", e);
                 continue;
             }
         };
     }
- 
-    println!("Max: {}", max); 
+
+    println!("Max: {}", max);
 }
 
-// Find the top three Elves carrying the most Calories. 
+// Find the top three Elves carrying the most Calories.
 // How many Calories are those Elves carrying in total?
 fn part2() {
     let f = File::open("./input/day1_input.txt").expect("unable to open file.");
@@ -61,7 +59,7 @@ fn part2() {
     let mut current = 0;
     let mut elves = Vec::new();
 
-    for line  in reader.lines() {
+    for line in reader.lines() {
         let line = line.expect("something went wrong.");
 
         if line.is_empty() {
@@ -72,16 +70,15 @@ fn part2() {
 
         match line.parse::<i32>() {
             Ok(n) => current += n,
-            Err(e) => { 
-                println!("Error: {}", e); 
-                continue; 
+            Err(e) => {
+                println!("Error: {}", e);
+                continue;
             }
         };
-
     }
 
     // now that we have the elves in one vector, sort them by largest calorie count
-    elves.sort_by(|a,b| b.cmp(a));
+    elves.sort_by(|a, b| b.cmp(a));
 
     // dbg!(&elves);
 
