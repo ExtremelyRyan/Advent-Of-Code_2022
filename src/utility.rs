@@ -1,20 +1,6 @@
 use std::{fs::read_to_string, path::Path};
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
-
+ 
 /// read file, and return values within a Vector of Strings.
 pub fn input_to_vec_string<T: AsRef<Path>>(path: T) -> Vec<String> {
     read_to_string(path)
