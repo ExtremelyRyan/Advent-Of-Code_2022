@@ -26,13 +26,11 @@ impl Problem for Three {
     total.to_string()
     }
     fn part_two(&self, input: &str) -> String {
-        let lines = parse_lines(utility::input_to_vec_string(input.to_string()));
+        let lines =  utility::input_to_vec_string(input.to_string());
 // Every set of three lines in your list corresponds to a single group
     //
     let mut sum = 0;
-    let mut index = 0;
-
-    let lines = read_input(path);
+    let mut index = 0; 
     let length = lines.len();
 
     loop {
@@ -59,7 +57,6 @@ impl Problem for Three {
     }
 }
 
-
 fn parse_lines(lines: Vec<String>) -> Vec<(String, String)> {
     // store moves here in a vector<touple>
     let mut rucksack: Vec<(String, String)> = Vec::new();
@@ -70,7 +67,7 @@ fn parse_lines(lines: Vec<String>) -> Vec<(String, String)> {
         //println!("left: {left}, right: {right}");
     }
     rucksack
-}
+} 
 
 fn get_ascii_value(found: Vec<char>) -> i32 {
     for i in found {
@@ -94,7 +91,7 @@ mod tests {
         let input =
             std::fs::read_to_string("./input/day3_input.txt").expect("error reading from file!");
         let result = one.part_one(&input);
-        assert_eq!("", result);
+        assert_eq!("17", result);
     }
     #[test]
     fn test_day3_part2() {
@@ -102,6 +99,6 @@ mod tests {
         let input =
             std::fs::read_to_string("./input/day3_input.txt").expect("error reading from file!");
         let result = one.part_two(&input);
-        assert_eq!("", result);
+        assert_eq!("2602", result);
     }
 }

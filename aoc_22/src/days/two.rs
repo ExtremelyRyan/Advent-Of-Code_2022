@@ -122,7 +122,7 @@ mod tests {
         let input =
             std::fs::read_to_string("./input/day2_input.txt").expect("error reading from file!");
         let result = one.part_one(&input);
-        assert_eq!("", result);
+        assert_eq!("10718", result);
     }
     #[test]
     fn test_day2_part2() {
@@ -130,6 +130,6 @@ mod tests {
         let input =
             std::fs::read_to_string("./input/day2_input.txt").expect("error reading from file!");
         let result = one.part_two(&input);
-        assert_eq!("", result);
+        assert_eq!("14652", result);
     }
 }
