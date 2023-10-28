@@ -1,0 +1,1 @@
+C:\code\advent-of-code\target\debug\aoc_22.exe: C:\code\advent-of-code\aoc_22\src\days\mod.rs C:\code\advent-of-code\aoc_22\src\days\one.rs C:\code\advent-of-code\aoc_22\src\days\two.rs C:\code\advent-of-code\aoc_22\src\days\utility.rs C:\code\advent-of-code\aoc_22\src\main.rs
