@@ -20,7 +20,7 @@ fn main() {
                 let result = run_problem(
                     problem,
                     3,
-                    format!("./aoc_22/input/day{}_input.txt", n).as_str(),
+                    format!("./aoc_xx/input/day{}_input.txt", n).as_str(),
                 );
                 println!("day{} {}", n, result);
             }
@@ -34,7 +34,7 @@ fn main() {
             let result = run_problem(
                 problem,
                 part,
-                format!("./aoc_22/input/day{}_input.txt", args[0]).as_str(),
+                format!("./aoc_xx/input/day{}_input.txt", args[0]).as_str(),
             );
             println!("{}", result);
         }
@@ -47,10 +47,10 @@ fn main() {
 fn day_to_problem(day: usize) -> Option<Box<dyn Problem>> {
     match day {
         1 => Some(Box::new(days::one::One {})),
-        2 => Some(Box::new(days::two::Two {})),
-        3 => Some(Box::new(days::three::Three {})),
-        4 => Some(Box::new(days::four::Four {})),
-        5 => Some(Box::new(days::five::Five {})),
+        // 2 => Some(Box::new(days::two::Two {})),
+        // 3 => Some(Box::new(days::three::Three {})),
+        // 4 => Some(Box::new(days::four::Four {})),
+        // 5 => Some(Box::new(days::five::Five {})),
         // 6 => Some(Box::new(days::two::Two {})),
         // 7 => Some(Box::new(days::two::Two {})),
         // 8 => Some(Box::new(days::two::Two {})),

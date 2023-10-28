@@ -7,3 +7,6 @@ members = [
     "aoc_22",
     "aoc_23"
 ]
+
+[term]
+quiet = true

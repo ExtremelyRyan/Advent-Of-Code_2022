@@ -1,5 +1,5 @@
-use crate::problem::Problem; 
 use crate::days::utility;
+use crate::problem::Problem;
 
 #[derive(Debug)]
 pub struct Two {}
@@ -28,7 +28,7 @@ impl Problem for Two {
                 'Z' => 3, // Scissors
                 _ => todo!(),
             };
-    
+
             // win
             if player_score == 1 && opponent_score == 3      // rock beats scissors
                 || player_score == 2 && opponent_score == 1  // Paper beats rock
@@ -62,7 +62,7 @@ impl Problem for Two {
                 'C' => 3, // Scissors
                 _ => todo!(),
             };
-    
+
             match m.1 {
                 // lose
                 'X' => {
@@ -113,8 +113,8 @@ fn parse_lines(lines: String) -> Vec<(char, char)> {
 
 #[cfg(test)]
 mod tests {
-    use crate::days::*;
     use super::*;
+    use crate::days::*;
 
     #[test]
     fn test_day2_part1() {
@@ -126,7 +126,7 @@ mod tests {
     }
     #[test]
     fn test_day2_part2() {
-        let one = two::Two{};
+        let one = two::Two {};
         let input =
             std::fs::read_to_string("./input/day2_input.txt").expect("error reading from file!");
         let result = one.part_two(&input);
