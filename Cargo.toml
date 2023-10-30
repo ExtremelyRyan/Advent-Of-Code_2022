@@ -4,6 +4,7 @@ default-run = "aoc_22"
 resolver = "2"
 
 members = [
+    "aoc_15",
     "aoc_22",
     "aoc_23"
 ]

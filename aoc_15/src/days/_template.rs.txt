@@ -1,0 +1,37 @@
+use crate::problem::Problem;
+use super::utility;
+
+#[derive(Debug)]
+pub struct Day {}
+
+impl Problem for Day {
+    fn part_one(&self, input: &str) -> String {
+        String::from("incomplete")
+    }
+    fn part_two(&self, input: &str) -> String {
+        String::from("incomplete")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::days::*;
+    use super::*;
+
+    #[test]
+    fn test_dayX_part1() {
+        let one = day::Day {};
+        let input =
+            std::fs::read_to_string("./input/dayX_input.txt").expect("error reading from file!");
+        let result = one.part_one(&input);
+        assert_eq!("", result);
+    }
+    #[test]
+    fn test_dayX_part2() {
+        let one = day::Day {};
+        let input =
+            std::fs::read_to_string("./input/dayX_input.txt").expect("error reading from file!");
+        let result = one.part_two(&input);
+        assert_eq!("", result);
+    }
+}
