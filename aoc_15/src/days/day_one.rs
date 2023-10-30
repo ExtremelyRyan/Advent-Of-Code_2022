@@ -19,8 +19,23 @@ impl Problem for DayOne {
         floor.to_string()
     }
     fn part_two(&self, input: &str) -> String {
-        String::from("incomplete")
-    }
+
+        let mut cur_floor = 0;
+        for (pos, c) in input.chars().enumerate() {
+            let step = match c {
+                '(' => 1,
+                ')' => -1,
+                _ => panic!("invalid character input"),
+            };
+            cur_floor += step;
+            if cur_floor < 0 {
+                let res = pos + 1;
+                return res.to_string();
+            }
+        
+        }
+    String::from("incomplete")
+}
 }
 
 #[cfg(test)]
@@ -34,7 +49,7 @@ mod tests {
         let input =
             std::fs::read_to_string("./input/day1_input.txt").expect("error reading from file!");
         let result = one.part_one(&input);
-        assert_eq!("", result);
+        assert_eq!("74", result);
     }
     #[test]
     fn test_dayX_part2() {
@@ -42,6 +57,6 @@ mod tests {
         let input =
             std::fs::read_to_string("./input/day1_input.txt").expect("error reading from file!");
         let result = one.part_two(&input);
-        assert_eq!("", result);
+        assert_eq!("1795", result);
     }
 }
